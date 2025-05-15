@@ -28,24 +28,24 @@ export default function MenuUpdatePage({ params }: Props) {
 
   useEffect(() => {
     if (id) {
+      const getMenu = async () => {
+        const response = await fetch(`${config.backofficeApiUrl}/menus/${id}`, {
+          headers: { "content-type": "application/json" },
+          method: "GET",
+        });
+        const dataFromServer = await response.json();
+        const { menu } = dataFromServer;
+        const selected = menu.menuCategoriesMenus.map(
+          (item: MenuCategoriesMenus) => item.menuCategoryId
+        );
+        setSelected(selected);
+        setMenu(menu);
+      };
+
       getMenu();
       getMenuCategories();
     }
   }, [id]);
-
-  const getMenu = async () => {
-    const response = await fetch(`${config.backofficeApiUrl}/menus/${id}`, {
-      headers: { "content-type": "application/json" },
-      method: "GET",
-    });
-    const dataFromServer = await response.json();
-    const { menu } = dataFromServer;
-    const selected = menu.menuCategoriesMenus.map(
-      (item: MenuCategoriesMenus) => item.menuCategoryId
-    );
-    setSelected(selected);
-    setMenu(menu);
-  };
 
   const getMenuCategories = async () => {
     const response = await fetch(`${config.backofficeApiUrl}/menu-categories`, {

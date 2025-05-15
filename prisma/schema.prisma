@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,25 +7,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Menus {
-  id  Int @id @default(autoincrement())
-  name  String
-  price Int?  @default(0)
-  isAvailable Boolean? @default(true)
+  id                  Int                    @id @default(autoincrement())
+  name                String
+  price               Int?                   @default(0)
+  isAvailable         Boolean?               @default(true)
   menuCategoriesMenus MenuCategoriesMenus[]
+  menuAddonCategories MenusAddonCategories[]
 }
 
 model MenuCategories {
-  id  Int @id @default(autoincrement())
-  name  String
+  id                  Int                   @id @default(autoincrement())
+  name                String
   menuCategoriesMenus MenuCategoriesMenus[]
 }
 
 model MenuCategoriesMenus {
-  id Int @id @default(autoincrement())
-  menuId Int
-  menu Menus @relation(fields: [menuId], references: [id])
+  id             Int            @id @default(autoincrement())
+  menuId         Int
+  menu           Menus          @relation(fields: [menuId], references: [id])
   menuCategoryId Int
-  menuCategory MenuCategories @relation(fields: [menuCategoryId], references: [id])
+  menuCategory   MenuCategories @relation(fields: [menuCategoryId], references: [id])
+}
+
+model AddonCategories {
+  id                  Int                    @id @default(autoincrement())
+  name                String
+  addons              Addons[] // One-to-many relationship
+  menuAddonCategories MenusAddonCategories[]
+  isRequired          Boolean                @default(false)
+}
+
+model Addons {
+  id              Int             @id @default(autoincrement())
+  name            String
+  price           Int
+  addonCategoryId Int
+  addonCategory   AddonCategories @relation(fields: [addonCategoryId], references: [id])
+  isAvailable     Boolean         @default(true)
+}
+
+model MenusAddonCategories {
+  id              Int             @id @default(autoincrement())
+  menuId          Int
+  menu            Menus           @relation(fields: [menuId], references: [id])
+  addonCategoryId Int
+  addonCategory   AddonCategories @relation(fields: [addonCategoryId], references: [id])
 }

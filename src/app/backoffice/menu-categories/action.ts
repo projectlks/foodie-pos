@@ -49,10 +49,7 @@ export async function deleteMenuCategory(formData: FormData) {
 
     const id = formData.get("id")
 
-    // const allDatawiththisId = await prisma.menuCategoriesMenus.findMany({
-    //     where: { menuCategoryId: Number(id) }
-    // })
-
+    
 
     await prisma.menuCategoriesMenus.deleteMany(
         {
